@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
-from django.db.models import BaseManager
+from django.utils import timezone
 
 from .models import Choice, Question
 
@@ -11,27 +11,19 @@ class IndexView(generic.ListView):
     template_name = "index.html"
     context_object_name = "latest_question_list"
 
-    def get_queryset(self) -> BaseManager[Question]:
-        return Question.objects.order_by("-pub_date")[:5]
-
-def index(request: HttpRequest) -> HttpResponse:
-    latest_question_list = Question.objects.order_by("-pub_date")[:5]
-    context = {
-        "latest_question_list": latest_question_list,
-    }
-    return render(request, "index.html", context)
+    def get_queryset(self):
+        past_questions = Question.objects.filter(pub_date__lte=timezone.now())
+        return past_questions.order_by("-pub_date")[:5]
 
 
-def detail(request: HttpRequest, question_id: int) -> HttpResponse:
-    question = get_object_or_404(Question, pk=question_id)
-
-    context = {"question": question}
-    return render(request, "detail.html", context)
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = "results.html"
 
 
-def result(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "results.html", {"question": question})
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = "detail.html"
 
 
 def vote(request, question_id):
