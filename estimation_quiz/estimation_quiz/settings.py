@@ -52,7 +52,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'estimation_quiz.urls'
 
-TEMPLATES = [
+TEMPLATES: list[dict[str, object]] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
