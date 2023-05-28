@@ -1,0 +1,28 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/simple.css' %}">
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block page_title %}{% endblock page_title %}</title>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="{% url 'quiz:rules' %}" class="current">Rules</a>
+                <a href="{% url 'quiz:standings' %}" class="current">Standings</a>
+                <a href="{% url 'quiz:questions' %}" class="current">Questions</a>
+            </nav>
+            <h1>
+                {% block title %}{% endblock title %}
+            </h1>
+            <p>{% block subtitle %}{% endblock subtitle %}</p>
+        </header>
+        <main class="container">
+            {% block main %}{% endblock main %}
+        </class>
+    </body>
+</html>
+
+

@@ -1,0 +1,27 @@
+{% extends 'template.html' %}
+
+{% block page_title %}Questions{% endblock %}
+
+{% block title %}Questions{% endblock %}
+
+{% block main %}
+<section id="tables">
+    <figure>
+        <center>
+            <table role="grid">
+                <tbody>
+                    {% for question in questions %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td> {{ question.question_text }} </td>
+                            <td><input type="number" placeholder='Lower bound'></td>
+                            <td><input type="number" placeholder='Upper bound'></td>
+                            <td><button> Submit </button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </center>
+    </figure>
+</section>
+{% endblock main %}

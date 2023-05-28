@@ -1,0 +1,38 @@
+{% extends 'template.html' %}
+
+{% block page_title %}Standings{% endblock %}
+
+{% block title %}Standings{% endblock %}
+
+{% block main %}
+<section id="tables">
+    <figure>
+        <center>
+            <table role="grid">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Team</th>
+                    {% for question in questions %}
+                        <th scope="col">{{ forloop.counter }}</th>
+                    {% endfor %}
+                    <th scope="col">Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for contestant in contestants %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ contestant.username }}</td>
+                            {% for question in questions %}
+                                <td>Result</td>
+                            {% endfor %}
+                            <td>0</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </center>
+    </figure>
+</section>
+{% endblock main %}
