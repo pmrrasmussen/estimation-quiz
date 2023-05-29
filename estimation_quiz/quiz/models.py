@@ -13,7 +13,7 @@ class UserAnswer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     answer_high = models.IntegerField()
     answer_low = models.IntegerField()
-    answer_date = models.DateTimeField()
+    answer_date = models.DateTimeField(auto_now=True)
 
 
 class Result(models.Model):

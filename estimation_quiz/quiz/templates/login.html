@@ -1,0 +1,32 @@
+{% extends 'template.html' %}
+
+{% block page_title %}Login{% endblock %}
+
+{% block title %}Login{% endblock %}
+
+{% block main %}
+{% if user.is_authenticated %}
+    <center>
+        <h2> Logged in as {{ user.get_username }}! </h2>
+    </center>
+{% else %}
+    <center>
+        <h2>Log In</h2>
+        {% if error_message %}
+            <p style="color:red">
+                <strong>
+                    {{ error_message }}
+                </strong>
+            </p>
+        {% endif %}
+        <form action="{% url 'quiz:attempt_login' %}" method="post">
+        {% csrf_token %}
+        <input id="inputUsername" name="username" class="form-control" placeholder="Username" required="" autofocus="" type="text">
+        <br>
+        <input id="inputPassword" name="password" class="form-control" placeholder="Password" required="" type="password">
+        <br>
+        <button type="submit" value="Log In">Log In</button>
+    </form>
+    </center>
+{% endif %}
+{% endblock main %}

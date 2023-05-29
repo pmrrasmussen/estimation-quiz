@@ -658,3 +658,13 @@ dialog::backdrop {
   padding: 1.5rem;
   margin: 2rem 0;
 }
+
+
+/* Additionals */
+p.success {
+  color: green;
+}
+
+.error {
+  color: red;
+}
