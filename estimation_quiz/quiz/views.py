@@ -36,7 +36,7 @@ def attempt_login(request):
             request,
             "login.html",
             {
-                "error_message": "Invalid username or password."
+                "error_message": "Invalid username or password"
             }
         )
 
@@ -84,15 +84,10 @@ def answer(request):
     user = request.user
 
     if not answer_is_valid(lower_bound, upper_bound):
-        messages.error(request, "Invalid input.")
-        return render(
-            request,
-            "questions.html",
-        )
-
-
-    process_answer(question, user, lower_bound, upper_bound)
-    messages.success(request, "Answer successfully submitted.")
+        messages.error(request, "Invalid input")
+    else:
+        process_answer(question, user, lower_bound, upper_bound)
+        messages.success(request, "Answer successfully submitted")
 
     return HttpResponseRedirect(reverse("quiz:questions"))
 
@@ -107,4 +102,4 @@ def process_answer(question, user, lower_bound, upper_bound):
 
 
 def answer_is_valid(lower_bound, upper_bound):
-    return True
+    return False
