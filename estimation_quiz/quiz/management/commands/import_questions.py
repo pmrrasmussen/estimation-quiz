@@ -44,7 +44,7 @@ class Command(BaseCommand):
         with open(questions_file_path) as questions_file:
             for line in questions_file.readlines():
                 try:
-                    question_text, answer = line.split(",")
+                    question_text, answer = line.split(";")
                     answer = int(answer)
                 except ValueError:
                     raise CommandError(f"Aborting. Ill-formated line: {line}")
