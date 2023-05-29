@@ -1,6 +1,5 @@
 from django import template
 
-from ..models import UserAnswer
 
 register = template.Library()
 

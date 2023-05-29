@@ -7,12 +7,18 @@ from collections import namedtuple
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-from .models import Question, UserAnswer, Result
+from .models import (Question, Result,
+                     get_active_questions, validate_answer,
+                     create_answer_from_input, commit_answer_to_results)
 
+from django.core.management import call_command
+
+
+# Scoring and standings
 
 def standings(request):
     contestants = User.objects.filter(groups__name="Team")
-    questions = Question.objects.order_by("id").all()
+    questions = get_active_questions()
 
     Outcome = namedtuple('Outcome', ['contestant', 'scores', 'total'])
 
@@ -55,6 +61,8 @@ def get_total_from_scores(scores):
     return additive_part*multiplicative_part
 
 
+# Account access
+
 def attempt_login(request):
     username = request.POST["username"]
     password = request.POST["password"]
@@ -88,12 +96,20 @@ def attempt_logout(request):
     )
 
 
+# Rules and home
+
 def home(request):
     return HttpResponseRedirect(reverse("quiz:rules"))
 
 
+def rules(request):
+    return render(request, "rules.html")
+
+
+# Answering questions
+
 def questions(request):
-    questions = Question.objects.order_by("id").all()
+    questions = get_active_questions().order_by("id")
 
     return render(
         request,
@@ -104,10 +120,6 @@ def questions(request):
     )
 
 
-def rules(request):
-    return render(request, "rules.html")
-
-
 def answer(request):
     question_id = request.POST["question_id"]
     lower_bound = request.POST["lower_bound"]
@@ -115,47 +127,26 @@ def answer(request):
     question = get_object_or_404(Question, pk=question_id)
     user = request.user
 
-    if answer_is_valid(request, lower_bound, upper_bound):
-        process_answer(question, user, lower_bound, upper_bound)
+    answer_valid, error_message = validate_answer(lower_bound, upper_bound)
+
+    if answer_valid:
+        answer = create_answer_from_input(
+            question,
+            user,
+            lower_bound,
+            upper_bound
+        )
+        commit_answer_to_results(answer)
+
         messages.success(request, "Answer successfully submitted")
+    else:
+        messages.error(request, f"Invalid input: {error_message}")
 
     return HttpResponseRedirect(reverse("quiz:questions"))
 
 
-def process_answer(question, user, lower_bound, upper_bound):
-    lower_bound = int(lower_bound)
-    upper_bound = int(upper_bound)
+# Admin commands
 
-    answer = UserAnswer(
-        question=question,
-        user=user,
-        answer_high=upper_bound,
-        answer_low=lower_bound,
-    ).save()
-
-    result, _ = Result.objects.get_or_create(user=user, question=question)
-
-    result.answer_ratio = int(upper_bound/lower_bound)
-    result.correct_answer = lower_bound <= question.answer <= upper_bound
-
-    result.save()
-
-
-def answer_is_valid(request, lower_bound, upper_bound):
-    try:
-        lower_bound = int(lower_bound)
-        upper_bound = int(upper_bound)
-    except ValueError:
-        messages.error(request, "Invalid input: Could not convert input to integers.")
-        return False
-
-    if lower_bound < 1:
-        messages.error(request, "Invalid input: Lower bound <1.")
-        return False
-
-    if lower_bound >= upper_bound:
-        messages.error(request, "Invalid input: Lower bound should be smaller than upper bound.")
-        return False
-
-    return True
-
+def reset_results(request):
+    call_command('reset_results')
+    return HttpResponseRedirect(reverse("quiz:standings"))

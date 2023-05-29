@@ -28,3 +28,57 @@ class Result(models.Model):
                 fields=['question', 'user'],
                 name='unique_result'),
         ]
+
+
+def create_answer_from_input(question, user, lower_bound, upper_bound) -> UserAnswer:
+    lower_bound = int(lower_bound)
+    upper_bound = int(upper_bound)
+
+    answer = UserAnswer(
+        question=question,
+        user=user,
+        answer_high=upper_bound,
+        answer_low=lower_bound,
+    )
+    answer.save()
+
+    return answer
+
+
+def commit_answer_to_results(answer: UserAnswer):
+    result, _ = Result.objects.get_or_create(
+        user=answer.user,
+        question=answer.question,
+    )
+
+    result.answer_ratio = int(answer.answer_high/answer.answer_low)
+    result.correct_answer = (
+        answer.answer_low <= answer.question.answer and
+        answer.question.answer <= answer.answer_high
+    )
+
+    result.save()
+
+
+def validate_answer(lower_bound, upper_bound):
+    """
+    Checks that an answer is valid and returns (answer_is_valid, error_message).
+    The error message is empty if and only if the answer was valid.
+    """
+    try:
+        lower_bound = int(lower_bound)
+        upper_bound = int(upper_bound)
+    except ValueError:
+        return (False, "Could not convert answers to integers")
+
+    if lower_bound < 1:
+        return (False, "Lower bound <1")
+
+    if lower_bound >= upper_bound:
+        return (False, "Lower bound should be smaller than upper bound")
+
+    return (True, "")
+
+
+def get_active_questions():
+    return Question.objects.filter(is_active=True)
