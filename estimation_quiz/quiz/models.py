@@ -7,6 +7,9 @@ class Question(models.Model):
     answer = models.IntegerField()
     is_active = models.BooleanField()
 
+    def __str__(self) -> str:
+        return self.question_text
+
 
 class UserAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -15,12 +18,19 @@ class UserAnswer(models.Model):
     answer_low = models.IntegerField()
     answer_date = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return f"{self.user.username}: {self.question.question_text}: {self.answer_low} - {self.answer_high}"
+
 
 class Result(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     answer_ratio = models.IntegerField(default=1)
     correct_answer = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username}: {self.question.question_text}: {self.answer_ratio}: {self.correct_answer}"
+
 
     class Meta:
         constraints = [
