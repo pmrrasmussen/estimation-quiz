@@ -20,14 +20,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {% for contestant in contestants %}
+                    {% for outcome in outcomes %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td>{{ contestant.username }}</td>
-                            {% for question in questions %}
-                                <td>Result</td>
+                            <td>{{ outcome.contestant }}</td>
+                            {% for score in outcome.scores %}
+                                <td>{{ score }}</td>
                             {% endfor %}
-                            <td>0</td>
+                            <td>{{ outcome.total }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

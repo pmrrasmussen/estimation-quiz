@@ -40,7 +40,7 @@
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
                             <td> {{ question.question_text }} </td>
-                            {% if user|has_group:"Team" %}
+                            {% if user|has_group:"Team" and user|remaining_guesses > 0 %}
                                 <form action="{% url 'quiz:answer' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="question_id" value="{{ question.id }}"">

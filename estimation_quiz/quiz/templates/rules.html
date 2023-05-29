@@ -1,11 +1,18 @@
 {% extends 'template.html' %}
+{% load latexify %}
+{% load static %}
 
 {% block page_title %}Rules{% endblock %}
 
 {% block title %}Rules{% endblock %}
 
+{% block subtitle %}
+    {% include 'latexify/stylesheets.html' %}
+{% endblock %}
+
 {% block main %}
-<section id="tables">
-    Here goes the rules!
-</section>
+<embed src="{% static 'media/rules.pdf' %}" type="application/pdf" width="800" height="800" >
+
 {% endblock main %}
+
+{% include "latexify/scripts.html" %}

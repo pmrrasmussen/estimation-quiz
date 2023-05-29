@@ -19,5 +19,12 @@ class UserAnswer(models.Model):
 class Result(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    answer_ratio = models.IntegerField()
-    correct_answer = models.BooleanField()
+    answer_ratio = models.IntegerField(default=1)
+    correct_answer = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['question', 'user'],
+                name='unique_result'),
+        ]
