@@ -110,12 +110,14 @@ def rules(request):
 
 def questions(request):
     questions = get_active_questions().order_by("id")
+    non_admin_users = User.objects.filter(is_superuser=False)
 
     return render(
         request,
         "questions.html",
         {
             "questions": questions,
+            "contestants": non_admin_users,
         },
     )
 
@@ -125,7 +127,12 @@ def answer(request):
     lower_bound = request.POST["lower_bound"]
     upper_bound = request.POST["upper_bound"]
     question = get_object_or_404(Question, pk=question_id)
-    user = request.user
+
+    if 'contestant' in request.POST and request.user.is_superuser:
+        contestant_id = request.POST['contestant']
+        user = User.objects.get(pk=contestant_id)
+    else:
+        user = request.user
 
     answer_valid, error_message = validate_answer(lower_bound, upper_bound)
 

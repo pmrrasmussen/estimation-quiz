@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument("qset", nargs=1, type=str)
+        parser.add_argument("question-file", nargs=1, type=str)
         parser.add_argument(
             "--delete-old-questions",
             action="store_true",
@@ -32,8 +32,7 @@ class Command(BaseCommand):
                 question.save()
 
         try:
-            question_set = options['qset'][0]
-            questions_file_name = f"{question_set}.csv"
+            questions_file_name = options['question-file'][0]
         except Exception:
             raise CommandError("No question set specified.")
 

@@ -26,4 +26,3 @@ class Command(BaseCommand):
     def erase_results(self):
         Result.objects.all().delete()
 
-

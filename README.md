@@ -15,9 +15,9 @@ Questions can be imported with the management tool, `import_questions`. Place th
     ...
 ```
 
-Now, to import my_questions_file.csv run the following command:
+Now, to import *my_questions_file.csv* run the following command:
 ```
-    python manage.py import_questions my_questions_file
+    python manage.py import_questions my_questions_file.csv
 ```
 There are three optional flags to the function:
 - `--delete-old-questions`: Removes all previous questions from the database.
@@ -26,7 +26,7 @@ There are three optional flags to the function:
 
 An example:
 ```
-    python manage.py import_questions my_questions_file --delete-old-questions
+    python manage.py import_questions my_questions_file.csv --delete-old-questions
 ```
 
 ## Resetting results

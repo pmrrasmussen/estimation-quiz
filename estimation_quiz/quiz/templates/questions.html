@@ -40,12 +40,19 @@
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
                             <td> {{ question.question_text }} </td>
-                            {% if user|has_group:"Team" and user|remaining_guesses > 0 %}
+                            {% if user.is_superuser or user.is_authenticated and user|remaining_guesses > 0 %}
                                 <form action="{% url 'quiz:answer' %}" method="post">
                                     {% csrf_token %}
                                     <input type="hidden" name="question_id" value="{{ question.id }}"">
                                     <td><input name="lower_bound" type="number" min="1" placeholder='Lower bound'></td>
                                     <td><input name="upper_bound" type="number" min="1" placeholder='Upper bound'></td>
+                                    {% if user.is_superuser %}
+                                        <td><select name="contestant" placeholder="Contestant">
+                                            {% for contestant in contestants %}
+                                                <option value="{{ contestant.pk }}">{{ contestant.username }}</option>
+                                            {% endfor %}
+                                        </select></td>
+                                    {% endif %}
                                     <td><input type="submit" value="Answer"</td>
                                 </form>
                             {% endif %}
