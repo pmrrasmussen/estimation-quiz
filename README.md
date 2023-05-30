@@ -1,5 +1,5 @@
 # Estimathon
-A Django webapp implementing an estimation based quiz.
+A Django webapp implementing an estimation based quiz. Further features and instructions on setting up a quiz are coming soon!
 
 ## Managing the web app
 Like any other Django-webapp, management of the application happens with the Django management tool. To access it, navigate the the topmost *estimation_quiz* folder and run
