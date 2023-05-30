@@ -1,4 +1,3 @@
-pip install -r requirements.txt
 cd estimation_quiz
 echo "Settin up database tables"
 python manage.py makemigrations
