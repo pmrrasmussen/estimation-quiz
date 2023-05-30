@@ -11,6 +11,8 @@ from .models import (Question, Result,
                      get_active_questions, validate_answer,
                      create_answer_from_input, commit_answer_to_results)
 
+from .templatetags.quiz_extras import remaining_guesses
+
 from django.core.management import call_command
 
 
@@ -135,6 +137,10 @@ def answer(request):
         user = request.user
 
     answer_valid, error_message = validate_answer(lower_bound, upper_bound)
+
+    if remaining_guesses(user) <= 0:
+        answer_valid = False
+        error_message = f"User {user.username} is out of guesses"
 
     if answer_valid:
         answer = create_answer_from_input(

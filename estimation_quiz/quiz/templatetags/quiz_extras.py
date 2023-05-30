@@ -22,4 +22,4 @@ def remaining_guesses(user) -> int:
 
 @register.filter(name="total_guesses")
 def total_guesses(user) -> int:
-    return 35
+    return 4
