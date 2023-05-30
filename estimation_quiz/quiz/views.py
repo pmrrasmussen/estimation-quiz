@@ -19,7 +19,7 @@ from django.core.management import call_command
 # Scoring and standings
 
 def standings(request):
-    contestants = User.objects.filter(groups__name="Team")
+    contestants = User.objects.filter(is_superuser=False)
     questions = get_active_questions()
 
     Outcome = namedtuple('Outcome', ['contestant', 'scores', 'total'])
