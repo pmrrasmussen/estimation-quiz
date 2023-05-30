@@ -7,7 +7,7 @@
 {% block title %}Questions{% endblock %}
 
 {% block subtitle %}
-    {% if user|has_group:"Team" %}
+    {% if not user.is_superuser %}
         <h3>
             Remaining guesses: {{ user|remaining_guesses }}/{{ user|total_guesses }}
         </h3>
