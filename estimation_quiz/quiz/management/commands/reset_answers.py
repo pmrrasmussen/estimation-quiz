@@ -9,7 +9,3 @@ class Command(BaseCommand):
         UserAnswer.objects.all().delete()
 
         call_command('reset_results')
-
-
-
-
