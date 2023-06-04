@@ -10,7 +10,7 @@ Steps:
     * An admin account for the app
 - From the estimation_quiz folder, execute `python manage.py runserver` to start the web app.
 - Go to [https://localhost:8000/quiz](http://localhost:8000/quiz) to access the web app
-- To add contestants to the quiz, manage questions, and more, go to [https://localhost:8000/admin](http://localhost:8000/admin) to access admin features
+- To add contestants (users) to the quiz, manage questions, and more, go to [https://localhost:8000/admin](http://localhost:8000/admin) to access admin features
 
 ## Managing the web app
 Like any other Django-webapp, management of the application happens with the Django management tool. To access it, navigate the the topmost *estimation_quiz* folder and run
