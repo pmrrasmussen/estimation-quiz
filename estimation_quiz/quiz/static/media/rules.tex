@@ -1,0 +1,26 @@
+\documentclass{article}
+
+\title{\Huge Estimation Quiz}
+\date{}
+\begin{document}
+	\maketitle
+	\thispagestyle{empty}
+	\section*{Goal}
+		You are asked to estimate a number of quantities, $x_1, \dots, x_k$. For instance, a quantity could be \emph{the shortest distance to the moon from the Earth in kilometers}. For every quantity, $x_i$, you guess an interval $[l_i, u_i]$ that should contain $x_i$. Upon guessing, you only learn whether the interval contains $x_i$ or not. Your guesses will give you a score $S$ and the objective of the game is to minimise $S$.
+		
+	\section*{Scoring}
+		The score $S$ is computed as follows.
+		\begin{itemize}
+			\item For every correct interval, i.e., where $l_i\leq x_i\leq u_i$, the rounded down fraction $\left\lfloor \frac{u_i}{l_i	}\right\rfloor$ is computed.
+			\item The rounded fractions are summed and 10 is added to the score.
+			\item Then, for every quantity where a correct interval has not been guessed, the score is multiplied by 2. For example, if there are 3 quantities that you have not guessed a correct interval for, the score $S$ is multiplied by 8.
+		\end{itemize}
+		Thus, it is good to have tight intervals (making $\left\lfloor \frac{u_i}{l_i	}\right\rfloor$ as small as possible). However, it is also important to guess correctly, since multiplying $S$ by 2 is costly. Mathematically, we can express the score as
+		$$
+		S = \left( 10 + \sum_{i: x_i\in [l_i, u_i]} \left\lfloor \frac{u_i}{l_i	}\right\rfloor \right)\cdot 2^{\left | \{ i \mid x_i\not\in [l_i, u_i] \} \right|}
+		$$
+	\section*{Guessing}
+	For every quantity, submit an interval of positive integers as a lower and upper bound $l_i < u_i$. There is a maximum number of guesses, so guess carefully. For every quantity, it is the latest guess that counts towards the score, regardless of whether a previous guess was better.
+
+	
+\end{document}
