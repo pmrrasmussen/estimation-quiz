@@ -2,14 +2,16 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
-from collections import namedtuple
+from collections import namedtuple, defaultdict
+from typing import NamedTuple
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 from .models import (Question, Result,
                      get_active_questions, validate_answer,
-                     create_answer_from_input, commit_answer_to_results)
+                     create_answer_from_input, commit_answer_to_results,
+                     get_result, get_latest_answer)
 
 from .templatetags.quiz_extras import remaining_guesses
 
@@ -47,14 +49,14 @@ def standings(request):
 def get_contestant_scores(contestant, questions):
     contestant_scores = []
     for question in questions:
-        result, _ = Result.objects.get_or_create(
-            user=contestant,
-            question=question)
+        result = get_result(contestant, question)
         contestant_scores.append(
-            result.answer_ratio if result.correct_answer else '-'
+            get_score_from_result(result)
         )
     return contestant_scores
 
+def get_score_from_result(result: Result) -> str | int:
+    return result.answer_ratio if result.correct_answer else '-'
 
 def get_total_from_scores(scores):
     additive_part = 10+sum([score for score in scores if score != '-'])
@@ -109,10 +111,16 @@ def rules(request):
 
 
 # Answering questions
+class QuestionRow(NamedTuple):
+    question: Question
+    lower_bound: str = ''
+    upper_bound: str = ''
+    score: str = '-'
 
 def questions(request):
     questions = get_active_questions().order_by("id")
     non_admin_users = User.objects.filter(is_superuser=False)
+    question_rows = [get_question_row(request.user, question) for question in questions]
 
     return render(
         request,
@@ -120,9 +128,27 @@ def questions(request):
         {
             "questions": questions,
             "contestants": non_admin_users,
+            "question_rows": question_rows,
         },
     )
 
+def get_question_row(user: User, question: Question) -> QuestionRow:
+    if user.is_superuser or not user.is_authenticated:
+        return QuestionRow(question=question)
+
+    latest_answer = get_latest_answer(user, question)
+    lower_bound = '' if latest_answer is None else str(latest_answer.answer_low)
+    upper_bound = '' if latest_answer is None else str(latest_answer.answer_high)
+
+    result = get_result(user, question)
+    score = str(get_score_from_result(result))
+
+    return QuestionRow(
+        question=question,
+        lower_bound=lower_bound,
+        upper_bound=upper_bound,
+        score=score
+    )
 
 def answer(request):
     question_id = request.POST["question_id"]

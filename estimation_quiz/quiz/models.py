@@ -92,3 +92,18 @@ def validate_answer(lower_bound, upper_bound):
 
 def get_active_questions():
     return Question.objects.filter(is_active=True)
+
+def get_latest_answer(user, question) -> UserAnswer | None:
+    question_answers = UserAnswer.objects\
+        .filter(user=user)\
+        .filter(question=question)\
+        .order_by('-answer_date')
+    if len(question_answers) > 0:
+        return question_answers[0]
+    return None
+
+def get_result(user, question):
+    result, _ = Result.objects.get_or_create(
+            user=user,
+            question=question)
+    return result

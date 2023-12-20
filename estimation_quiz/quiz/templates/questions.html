@@ -35,23 +35,38 @@
     <figure>
         <center>
             <table role="grid">
+                <thead>
+                    <th>#</th>
+                    <th>Question</th>
+                    {% if user.is_authenticated %}
+                        <th>Lower bound</th>
+                        <th>Upper bound</th>
+                        {% if user.is_superuser %}
+                            <th>Contestant</th>
+                        {% else %}
+                        <th>Score</th>
+                        {% endif %}
+                    {% endif %}
+                </thead>
                 <tbody>
-                    {% for question in questions %}
+                    {% for question_row in question_rows %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td> {{ question.question_text }} </td>
+                            <td> {{ question_row.question.question_text }} </td>
                             {% if user.is_superuser or user.is_authenticated and user|remaining_guesses > 0 %}
                                 <form action="{% url 'quiz:answer' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="hidden" name="question_id" value="{{ question.id }}"">
-                                    <td><input name="lower_bound" type="number" min="1" placeholder='Lower bound'></td>
-                                    <td><input name="upper_bound" type="number" min="1" placeholder='Upper bound'></td>
+                                    <input type="hidden" name="question_id" value="{{ question_row.question.id }}"">
+                                    <td><input name="lower_bound" type="number" min="1" placeholder={{question_row.lower_bound}}></td>
+                                    <td><input name="upper_bound" type="number" min="1" placeholder={{question_row.upper_bound}}></td>
                                     {% if user.is_superuser %}
                                         <td><select name="contestant" placeholder="Contestant">
                                             {% for contestant in contestants %}
                                                 <option value="{{ contestant.pk }}">{{ contestant.username }}</option>
                                             {% endfor %}
                                         </select></td>
+                                    {% else %}
+                                        <td>{{question_row.score}}</td>
                                     {% endif %}
                                     <td><input type="submit" value="Answer"</td>
                                 </form>

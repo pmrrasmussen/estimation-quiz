@@ -79,6 +79,7 @@ body > * {
 
 /* Make the header bg full width, but the content inline with body */
 body > header {
+  height: 160px;
   background-color: var(--accent-bg);
   border-bottom: 1px solid var(--border);
   text-align: center;
@@ -99,16 +100,22 @@ body > header p {
 /* Add a little padding to ensure spacing is correct between content and header > nav */
 main {
   padding-top: 1.5rem;
-  padding-bottom: 10rem;
+  padding-bottom: 4rem;
 }
 
 body > footer {
-  margin-top: 4rem;
+  margin-top: 1rem;
+  display: flex;
   padding: 2rem 1rem 1.5rem 1rem;
   color: var(--text-light);
   font-size: 0.9rem;
   text-align: center;
   border-top: 1px solid var(--border);
+}
+
+.footer-item {
+  text-align: center; /* Center-align the content within each item */
+  flex: 1; /* Distribute available space equally among items */
 }
 
 /* Format headers */

@@ -8,3 +8,4 @@ echo "Importing questions"
 python manage.py import_questions test_set.csv --delete-old-questions --silent
 echo "Creating admin user"
 python manage.py createsuperuser
+cd ..
