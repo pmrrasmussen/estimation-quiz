@@ -37,7 +37,7 @@
             <table role="grid">
                 <thead>
                     <th>#</th>
-                    <th>Question</th>
+                    <th style="width:500px;">Question</th>
                     {% if user.is_authenticated %}
                         <th>Lower bound</th>
                         <th>Upper bound</th>
@@ -52,7 +52,7 @@
                     {% for question_row in question_rows %}
                         <tr>
                             <th scope="row">{{ forloop.counter }}</th>
-                            <td> {{ question_row.question.question_text }} </td>
+                            <td style="width:500px;"> {{ question_row.question.question_text }} </td>
                             {% if user.is_superuser or user.is_authenticated and user|remaining_guesses > 0 %}
                                 <form action="{% url 'quiz:answer' %}" method="post">
                                     {% csrf_token %}
