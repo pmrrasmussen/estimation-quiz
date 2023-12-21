@@ -15,7 +15,7 @@ def remaining_guesses(user) -> int:
 
 @register.filter(name="total_guesses")
 def total_guesses(user) -> int:
-    return 25
+    return 35
 
 @register.simple_tag(takes_context=True)
 def is_active(context, url_name):
